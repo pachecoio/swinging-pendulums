@@ -1,14 +1,21 @@
-import { App } from "./app"
+import { Worker } from "worker_threads";
 
-const app = new App()
-const port = process.env.PORT || 3000
+const workers = []
 
-app.instance.listen(port, () => {
-    app.service.swingPendulum()
-    console.log(`Server is running on port ${port}`)
+    const worker = new Worker(
+        './src/worker.js',
+        {
+            workerData: {
+                path: './worker.ts',
+                port: 3000,
+                config: {
+                    gravity: 1,
+                    time: 1,
+                    refreshRate: 1000,
+                },
+                pendulum: {},
+            }
+        },
+    );
+    workers.push(worker);
 
-    process.on("SIGINT", () => {
-        app.service.stopPendulum()
-        process.exit()
-    })
-})

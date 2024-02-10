@@ -11,10 +11,10 @@ export class App {
     service: Service;
     private broker: Broker;
 
-    constructor(broker: Broker = getDefaultBroker()) {
+    constructor(broker: Broker = getDefaultBroker(), service?: Service) {
         this.instance = express()
         this.broker = broker;
-        this.service = new Service(broker);
+        this.service = service || new Service(broker);
 
         this.instance.locals.service = this.service
 
