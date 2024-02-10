@@ -58,4 +58,29 @@ describe("Pendulum", () => {
         // After moving the pendulum, the bob should be at a different position
         expect(Math.floor(pendulum.bob.x)).toBeLessThan(70)
     })
+
+    it("should move pendulum further when the mass is increased", () => {
+        const options = {
+            gravity: 9.81,
+        }
+        const pendulumWithDefaultMass = new Pendulum({
+            initialAngle: Math.PI / 4,
+            armLength: 100,
+            origin: { x: 0, y: 0 },
+        })
+
+        const pendulumWithHigherMass = new Pendulum({
+            initialAngle: Math.PI / 4,
+            armLength: 100,
+            origin: { x: 0, y: 0 },
+            mass: 2
+        })
+
+        pendulumWithDefaultMass.move(options)
+        pendulumWithHigherMass.move(options)
+
+        // Pendulum with higher mass should have moved further
+        // @ts-ignore
+        expect(pendulumWithHigherMass.bob.x).toBeLessThan(pendulumWithDefaultMass.bob.x)
+    })
 })

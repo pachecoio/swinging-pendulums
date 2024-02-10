@@ -1,5 +1,6 @@
 export const DEFAULT_ARM_LENGTH = 100;
 export const DEFAULT_INITIAL_ANGLE = Math.PI / 4;
+export const DEFAULT_MASS = 1;
 export const DEFAULT_BOB_RADIUS = 20;
 export const DEFAULT_BOB_COLOR = "black";
 
@@ -7,6 +8,7 @@ export class Pendulum {
     id: string;
     armLength: number;
     angle: number;
+    private mass: number;
     bob: Bob;
     origin: Position;
     acceleration: number = 0
@@ -17,12 +19,14 @@ export class Pendulum {
         origin = { x: 0, y: 0 },
         armLength = DEFAULT_ARM_LENGTH,
         initialAngle = DEFAULT_INITIAL_ANGLE,
+        mass = DEFAULT_MASS,
         bobRadius = DEFAULT_BOB_RADIUS,
         bobColor = DEFAULT_BOB_COLOR,
     }: CreatePendulumOptions = {}) {
         this.id = id;
         this.armLength = armLength;
         this.angle = initialAngle;
+        this.mass = mass;
 
         this.origin = { ...origin }
         const { x, y } = this.getBobPosition();
@@ -62,7 +66,7 @@ export class Pendulum {
     }
 
     private getForce(gravity: number): number {
-        return gravity * Math.sin(this.angle);
+        return this.mass * gravity * Math.sin(this.angle);
     }
 
     private getVelocity(gravity: number, time: number): number {
@@ -95,6 +99,7 @@ export type CreatePendulumOptions = {
     origin?: Position;
     armLength?: number;
     initialAngle?: number;
+    mass?: number;
     bobRadius?: number;
     bobColor?: string;
 }
