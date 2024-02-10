@@ -19,7 +19,7 @@ export class Pendulum {
         initialAngle = DEFAULT_INITIAL_ANGLE,
         bobRadius = DEFAULT_BOB_RADIUS,
         bobColor = DEFAULT_BOB_COLOR,
-    } = {}) {
+    }: CreatePendulumOptions = {}) {
         this.id = id;
         this.armLength = armLength;
         this.angle = initialAngle;
@@ -89,3 +89,13 @@ type Position = {
     x: number;
     y: number;
 }
+
+export type CreatePendulumOptions = {
+    id?: string;
+    origin?: Position;
+    armLength?: number;
+    initialAngle?: number;
+    bobRadius?: number;
+    bobColor?: string;
+}
+
