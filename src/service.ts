@@ -1,5 +1,5 @@
 import { Broker } from "./adapters/base";
-import { CreatePendulumOptions, Pendulum } from "./models/pendulum";
+import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
 export const DEFAULT_GRAVITY = 9.81
 export const DEFAULT_TIME = 1
 export const DEFAULT_REFRESH_RATE = 1000
@@ -53,6 +53,29 @@ export class Service {
         this.broker.removeListener(event, callback)
         return this
     }
+
+    getConfig() {
+        return {
+            gravity: this.gravity,
+            time: this.time,
+            refreshRate: this.refreshRate,
+        }
+    }
+
+    setConfig(options: ServiceOptions) {
+        this.gravity = options.gravity || this.gravity
+        this.time = options.time || this.time
+        this.refreshRate = options.refreshRate || this.refreshRate
+    }
+
+    getPendulum() {
+        return this.pendulum
+    }
+
+    updatePendulum(options: UpdatePendulumOptions) {
+        this.pendulum.update(options)
+        this.broker.emit("updated", this.pendulum)
+    }
 }
 
 export type ServiceOptions = ({
@@ -60,4 +83,5 @@ export type ServiceOptions = ({
     time?: number;
     refreshRate?: number;
 } & CreatePendulumOptions);
+
 

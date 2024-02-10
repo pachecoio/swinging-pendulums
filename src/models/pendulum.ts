@@ -8,7 +8,7 @@ export class Pendulum {
     id: string;
     armLength: number;
     angle: number;
-    private mass: number;
+    mass: number;
     bob: Bob;
     origin: Position;
     acceleration: number = 0
@@ -61,6 +61,28 @@ export class Pendulum {
         this.setAngle(newAngle);
     }
 
+    update(options: UpdatePendulumOptions) {
+        this.mass = options.mass || this.mass;
+        this.armLength = options.armLength || this.armLength;
+        this.origin = options.origin || this.origin;
+        this.angle = options.angle || this.angle;
+        this.bob.radius = options.bobRadius || this.bob.radius;
+        this.bob.color = options.bobColor || this.bob.color;
+
+        this.resetMotionValues();
+
+        const { x, y } = this.getBobPosition();
+        this.bob.x = x;
+        this.bob.y = y;
+
+        return this;
+    }
+
+    private resetMotionValues() {
+        this.acceleration = 0;
+        this.velocity = 0;
+    }
+
     private getAcceleration(gravity: number): number {
         return (-1 * this.getForce(gravity)) / this.armLength;
     }
@@ -100,6 +122,16 @@ export type CreatePendulumOptions = {
     armLength?: number;
     initialAngle?: number;
     mass?: number;
+    bobRadius?: number;
+    bobColor?: string;
+}
+
+
+export type UpdatePendulumOptions = {
+    mass?: number;
+    armLength?: number;
+    origin?: Position;
+    angle?: number;
     bobRadius?: number;
     bobColor?: string;
 }
