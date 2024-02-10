@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "testEnvironment": "node",
+  "testMatch": ["**/tests/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
+  "collectCoverageFrom": ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"],
+  "coverageDirectory": "coverage",
+  "coverageReporters": ["json", "lcov", "text", "clover"]
+}
