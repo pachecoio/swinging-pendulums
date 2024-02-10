@@ -1,12 +1,12 @@
 import { App } from "./app"
 
-export function runServer(workerData: WorkerData) {
+export function runServer(options: ServerOptions) {
     const app = new App()
-    const port = workerData.port || 3000
+    const port = options.port || 3000
 
     app.instance.listen(port, () => {
-        app.service.setConfig(workerData.config)
-        app.service.updatePendulum(workerData.pendulum)
+        app.service.setConfig(options.config)
+        app.service.updatePendulum(options.pendulum)
 
         app.service.swingPendulum()
         console.log(`Server is running on port ${port}`)
@@ -18,7 +18,7 @@ export function runServer(workerData: WorkerData) {
     })
 }
 
-export type WorkerData = {
+export type ServerOptions = {
     path: string;
     port: number;
     config: any;
