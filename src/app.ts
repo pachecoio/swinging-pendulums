@@ -3,11 +3,13 @@ import { getDefaultBroker } from "./adapters/broker";
 import router from "./router";
 import { Service } from "./service";
 import express, { Express } from "express";
+import expressWs from "express-ws";
+import websocketHandler from "./websocketHandler";
 
 export class App {
     instance: Express
+    service: Service;
     private broker: Broker;
-    private service: Service;
 
     constructor(broker: Broker = getDefaultBroker()) {
         this.instance = express()
@@ -17,14 +19,22 @@ export class App {
         this.instance.locals.service = this.service
 
         this.registerMiddlewares()
+
         this.registerRoutes()
+        this.registerWebsockets()
     }
 
     private registerMiddlewares() {
         this.instance.use(express.json())
+        expressWs(this.instance)
     }
 
     private registerRoutes() {
         this.instance.use(router)
+    }
+
+    private registerWebsockets() {
+        // @ts-ignore
+        this.instance.ws("/pendulum", websocketHandler)
     }
 }

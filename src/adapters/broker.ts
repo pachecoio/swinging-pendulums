@@ -8,12 +8,13 @@ export function getDefaultBroker(): Broker {
         return singletonBroker
     }
 
-    if (["test", "development"].includes(process.env.NODE_ENV || "")) {
+    if (["test"].includes(process.env.NODE_ENV || "")) {
         // return event emitter
         singletonBroker = new EventEmitter()
-        return singletonBroker
     } else {
         // return mqtt
-        throw new Error("Not implemented")
+        singletonBroker = new EventEmitter()
     }
+
+    return singletonBroker
 }

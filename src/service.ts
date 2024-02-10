@@ -1,8 +1,8 @@
 import { Broker } from "./adapters/base";
 import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
-export const DEFAULT_GRAVITY = 9.81
+export const DEFAULT_GRAVITY = 1
 export const DEFAULT_TIME = 1
-export const DEFAULT_REFRESH_RATE = 1000
+export const DEFAULT_REFRESH_RATE = 100
 
 export class Service {
     private broker: Broker;
@@ -15,7 +15,7 @@ export class Service {
     constructor(broker: Broker, options: ServiceOptions = {
         gravity: DEFAULT_GRAVITY,
         time: DEFAULT_TIME,
-        refreshRate: 1000,
+        refreshRate: DEFAULT_REFRESH_RATE,
     }) {
         this.broker = broker
         this.gravity = options.gravity || DEFAULT_GRAVITY
@@ -66,6 +66,15 @@ export class Service {
         this.gravity = options.gravity || this.gravity
         this.time = options.time || this.time
         this.refreshRate = options.refreshRate || this.refreshRate
+
+        if (this.isSwinging()) {
+            this.stopPendulum()
+            this.swingPendulum()
+        }
+    }
+
+    isSwinging() {
+        return !!this.swingingInterval
     }
 
     getPendulum() {
