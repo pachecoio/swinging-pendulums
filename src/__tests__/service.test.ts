@@ -3,7 +3,7 @@ import { Pendulum } from "../models/pendulum";
 import { EventEmitter } from "events";
 import { DEFAULT_GRAVITY, DEFAULT_TIME, Service } from "../service";
 import { Broker } from "../adapters/base";
-import { MQTTBroker } from "../adapters/mqtt";
+import { getMoveEventName, getStoppedEventName } from "../utils/eventUtils";
 
 describe("Test pendulum service", () => {
   jest.useFakeTimers();
@@ -27,7 +27,10 @@ describe("Test pendulum service", () => {
     const broker = new EventEmitter();
     const service = new Service(broker);
 
-    service.on("moved", moveHandler).on("stopped", stopHandler);
+    const moveEventName = getMoveEventName(service.pendulum.id);
+    const stopEventName = getStoppedEventName(service.pendulum.id);
+
+    service.on(moveEventName, moveHandler).on(stopEventName, stopHandler);
 
     service.movePendulum();
     expect(moveHandler).toBeCalledTimes(1);
@@ -40,10 +43,15 @@ describe("Test pendulum service", () => {
 
     const broker = new EventEmitter();
     const service = new Service(broker)
-      .on("moved", moveHandler)
-      .on("stopped", stopHandler);
 
-    service.removeListener("moved", moveHandler);
+    const moveEventName = getMoveEventName(service.pendulum.id);
+    const stopEventName = getStoppedEventName(service.pendulum.id);
+
+    service
+      .on(moveEventName, moveHandler)
+      .on(stopEventName, stopHandler);
+
+    service.removeListener(moveEventName, moveHandler);
     service.movePendulum();
     expect(moveHandler).toBeCalledTimes(0);
     expect(stopHandler).toBeCalledTimes(0);
@@ -55,8 +63,13 @@ describe("Test pendulum service", () => {
 
     const broker = new EventEmitter();
     const service = new Service(broker, { refreshRate: 100 })
-      .on("moved", moveHandler)
-      .on("stopped", stopHandler);
+
+    const moveEventName = getMoveEventName(service.pendulum.id);
+    const stopEventName = getStoppedEventName(service.pendulum.id);
+
+    service
+      .on(moveEventName, moveHandler)
+      .on(stopEventName, stopHandler);
 
     service.swingPendulum();
     expect(moveHandler).toBeCalledTimes(0);
@@ -73,4 +86,5 @@ describe("Test pendulum service", () => {
     expect(service.swingingInterval).toBeNull();
   });
 });
+
 

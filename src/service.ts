@@ -1,12 +1,13 @@
 import { Broker } from "./adapters/base";
 import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
+import { getMoveEventName, getResetEventName, getStoppedEventName, getUpdateEventName } from "./utils/eventUtils";
 export const DEFAULT_GRAVITY = 1
 export const DEFAULT_TIME = 1
 export const DEFAULT_REFRESH_RATE = 100
 
 export class Service {
     private broker: Broker;
-    private pendulum: Pendulum;
+    pendulum: Pendulum;
     private gravity: number;
     private time: number;
     private refreshRate: number;
@@ -29,7 +30,8 @@ export class Service {
             gravity: this.gravity,
             time: this.time
         })
-        this.broker.emit("moved", this.pendulum)
+        const eventName = getMoveEventName(this.pendulum.id)
+        this.broker.emit(eventName, this.pendulum)
     }
 
     swingPendulum() {
@@ -41,12 +43,14 @@ export class Service {
     stopPendulum() {
         this.swingingInterval && clearInterval(this.swingingInterval)
         this.swingingInterval = null
-        this.broker.emit("stopped", this.pendulum)
+        const eventName = getStoppedEventName(this.pendulum.id)
+        this.broker.emit(eventName, this.pendulum)
     }
 
     resetPendulum() {
         this.pendulum.resetPosition()
-        this.broker.emit("reset", this.pendulum)
+        const eventName = getResetEventName(this.pendulum.id)
+        this.broker.emit(eventName, this.pendulum)
     }
 
     on(event: string, callback: Function): Service {
@@ -88,7 +92,8 @@ export class Service {
 
     updatePendulum(options: UpdatePendulumOptions) {
         this.pendulum.update(options)
-        this.broker.emit("updated", this.pendulum)
+        const eventName = getUpdateEventName(this.pendulum.id)
+        this.broker.emit(eventName, this.pendulum)
     }
 }
 

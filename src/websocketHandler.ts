@@ -1,6 +1,7 @@
 import { Request } from "express"
 import { Service } from "./service"
 import { Pendulum } from "./models/pendulum"
+import { getMoveEventName } from "./utils/eventUtils"
 
 const handler = (ws: any, req: Request) => {
     const service = req.app.locals.service as Service
@@ -9,10 +10,11 @@ const handler = (ws: any, req: Request) => {
         ws.send(JSON.stringify(pendulum))
     }
 
-    service.on("moved", handler)
+    const movedEventName = getMoveEventName(service.pendulum.id)
+    service.on(movedEventName, handler)
 
     ws.on("close", () => {
-        service.removeListener("moved", handler)
+        service.removeListener(movedEventName, handler)
     })
 }
 
