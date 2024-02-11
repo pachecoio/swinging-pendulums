@@ -1,5 +1,5 @@
 import { workerData } from "worker_threads"
-import { runServer } from "./server"
+import { runServer } from "./pendulum/server"
 
 console.log('Worker started')
 
