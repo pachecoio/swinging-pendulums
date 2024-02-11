@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  pendulums:
+    image: thisk8brd/swinging-pendulums
+    build:
+      context: .
+    container_name: swinging-pendulums
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 3002:3002
+      - 3003:3003
+      - 3004:3004
+    networks:
+        - swinging-pendulums
+
+networks:
+  swinging-pendulums:
+    name: swinging-pendulums
