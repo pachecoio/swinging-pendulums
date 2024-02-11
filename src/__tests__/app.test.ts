@@ -6,6 +6,7 @@ import {
   DEFAULT_REFRESH_RATE,
   DEFAULT_TIME,
 } from "../service";
+import { EventEmitter } from "stream";
 
 describe("App", () => {
   const initialPort = process.env.PORT;
@@ -22,7 +23,7 @@ describe("App", () => {
   });
 
   it("should create an app instance with configuration from environment", () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     expect(app).toBeInstanceOf(App);
     // @ts-ignore
@@ -32,7 +33,7 @@ describe("App", () => {
   });
 
   it("should check health successfully", async () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     const res = await request(app.instance).get("/health");
 
@@ -41,7 +42,7 @@ describe("App", () => {
   });
 
   it("should get service configuration", async () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     const res = await request(app.instance).get("/config");
 
@@ -54,7 +55,7 @@ describe("App", () => {
   });
 
   it("should get pendulum information", async () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     const res = await request(app.instance).get("/pendulum");
 
@@ -76,11 +77,12 @@ describe("App", () => {
       velocity: expect.any(Number),
       angle: expect.any(Number),
       mass: expect.any(Number),
+      initialConfig: expect.any(Object)
     });
   });
 
   it("should update service configuration", async () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     const res = await request(app.instance)
       .put("/config")
@@ -95,7 +97,7 @@ describe("App", () => {
   });
 
   it("should update pendulum information", async () => {
-    const app = new App();
+    const app = new App(new EventEmitter());
 
     // @ts-ignore
     const initialBobX = app.service.getPendulum().bob.x;
@@ -127,6 +129,7 @@ describe("App", () => {
       velocity: expect.any(Number),
       angle: expect.any(Number),
       mass: 2,
+      initialConfig: expect.any(Object)
     });
 
     expect(res.body.bob.x).not.toBe(initialBobX);

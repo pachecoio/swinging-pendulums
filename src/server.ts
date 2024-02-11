@@ -2,8 +2,9 @@ import { getDefaultBroker } from "./adapters/broker"
 import { App } from "./app"
 import { Service } from "./service"
 
-export function runServer(options: ServerOptions) {
-    const broker = getDefaultBroker()
+export async function runServer(options: ServerOptions) {
+    const broker = await getDefaultBroker()
+
     const service = new Service(
         broker,
         {

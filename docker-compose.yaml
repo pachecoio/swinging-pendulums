@@ -11,6 +11,18 @@ services:
       - 3002:3002
       - 3003:3003
       - 3004:3004
+    environment:
+      - MQTT_BROKER_URI=mqtt://broker:1883
+    networks:
+        - swinging-pendulums
+
+  broker:
+    image: eclipse-mosquitto
+    container_name: broker
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
         - swinging-pendulums
 

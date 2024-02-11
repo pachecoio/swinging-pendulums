@@ -1,5 +1,4 @@
 import { Broker } from "./adapters/base";
-import { getDefaultBroker } from "./adapters/broker";
 import router from "./router";
 import { Service } from "./service";
 import express, { Express } from "express";
@@ -11,7 +10,7 @@ export class App {
     service: Service;
     broker: Broker;
 
-    constructor(broker: Broker = getDefaultBroker(), service?: Service) {
+    constructor(broker: Broker, service?: Service) {
         this.instance = express()
         this.broker = broker;
         this.service = service || new Service(broker);

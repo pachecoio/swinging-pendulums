@@ -3,6 +3,7 @@ import { Pendulum } from "../models/pendulum";
 import { EventEmitter } from "events";
 import { DEFAULT_GRAVITY, DEFAULT_TIME, Service } from "../service";
 import { Broker } from "../adapters/base";
+import { MQTTBroker } from "../adapters/mqtt";
 
 describe("Test pendulum service", () => {
   jest.useFakeTimers();
@@ -72,3 +73,4 @@ describe("Test pendulum service", () => {
     expect(service.swingingInterval).toBeNull();
   });
 });
+
