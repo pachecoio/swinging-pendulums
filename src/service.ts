@@ -44,6 +44,11 @@ export class Service {
         this.broker.emit("stopped", this.pendulum)
     }
 
+    resetPendulum() {
+        this.pendulum.resetPosition()
+        this.broker.emit("reset", this.pendulum)
+    }
+
     on(event: string, callback: Function): Service {
         this.broker.on(event, callback)
         return this

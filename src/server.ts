@@ -18,7 +18,6 @@ export function runServer(options: ServerOptions) {
         app.service.setConfig(options.config)
         app.service.updatePendulum(options.pendulum)
 
-        app.service.swingPendulum()
         console.log(`Server is running on port ${port}`)
 
         process.on("SIGINT", () => {

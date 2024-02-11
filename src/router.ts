@@ -34,4 +34,24 @@ router.put("/pendulum", (req, res) => {
     res.json(service.getPendulum())
 })
 
+router.post("/pendulum/start", (req, res) => {
+    const service = req.app.locals.service as Service
+    service.swingPendulum()
+    res.json(service.getPendulum())
+})
+
+router.post("/pendulum/pause", (req, res) => {
+    const service = req.app.locals.service as Service
+    service.stopPendulum()
+    res.json(service.getPendulum())
+})
+
+router.post("/pendulum/stop", (req, res) => {
+    const service = req.app.locals.service as Service
+    service.stopPendulum()
+    service.resetPendulum()
+    res.json(service.getPendulum())
+})
+
+
 export default router

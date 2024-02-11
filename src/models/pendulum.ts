@@ -13,6 +13,7 @@ export class Pendulum {
   origin: Position;
   acceleration: number = 0;
   velocity: number = 0;
+  private initialConfig: CreatePendulumOptions;
 
   constructor({
     id = generateId(),
@@ -25,6 +26,17 @@ export class Pendulum {
   }: CreatePendulumOptions = {}) {
     this.id = id;
     this.armLength = armLength;
+
+    this.initialConfig = {
+      id,
+      origin,
+      armLength,
+      initialAngle,
+      mass,
+      bobRadius,
+      bobColor,
+    };
+
     this.angle = initialAngle;
     this.mass = mass;
 
@@ -81,6 +93,13 @@ export class Pendulum {
   private resetMotionValues() {
     this.acceleration = 0;
     this.velocity = 0;
+  }
+
+  resetPosition() {
+    this.resetMotionValues();
+    this.update({
+      angle: this.initialConfig.initialAngle,
+    });
   }
 
   private getAcceleration(gravity: number): number {

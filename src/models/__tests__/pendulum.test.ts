@@ -83,4 +83,29 @@ describe("Pendulum", () => {
         // @ts-ignore
         expect(pendulumWithHigherMass.bob.x).toBeLessThan(pendulumWithDefaultMass.bob.x)
     })
+
+    it("should move pendulum and reset position", () => {
+        const pendulum = new Pendulum({
+            initialAngle: Math.PI / 4,
+            armLength: 100,
+            origin: { x: 0, y: 0 }
+        })
+
+        const initialBobPosition = {
+            x: pendulum.bob.x,
+            y: pendulum.bob.y
+        }
+
+        pendulum.move({ gravity: 9.81 })
+        pendulum.move({ gravity: 9.81 })
+        pendulum.move({ gravity: 9.81 })
+
+        expect(pendulum.bob.x).toBeLessThan(initialBobPosition.x)
+        expect(pendulum.bob.y).toBeGreaterThan(initialBobPosition.y)
+
+        pendulum.resetPosition()
+
+        expect(pendulum.bob.x).toBe(initialBobPosition.x)
+        expect(pendulum.bob.y).toBe(initialBobPosition.y)
+    })
 })
