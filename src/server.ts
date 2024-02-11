@@ -1,7 +1,17 @@
+import { getDefaultBroker } from "./adapters/broker"
 import { App } from "./app"
+import { Service } from "./service"
 
 export function runServer(options: ServerOptions) {
-    const app = new App()
+    const broker = getDefaultBroker()
+    const service = new Service(
+        broker,
+        {
+            ...options.config,
+            ...options.pendulum
+        }
+    )
+    const app = new App(broker, service)
     const port = options.port || 3000
 
     app.instance.listen(port, () => {
