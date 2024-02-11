@@ -9,7 +9,7 @@ import websocketHandler from "./websocketHandler";
 export class App {
     instance: Express
     service: Service;
-    private broker: Broker;
+    broker: Broker;
 
     constructor(broker: Broker = getDefaultBroker(), service?: Service) {
         this.instance = express()
