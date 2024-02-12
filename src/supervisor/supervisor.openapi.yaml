@@ -1,0 +1,140 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Pendulum supervisor API'
+  description: |
+    API to manage pendulums supervisor.
+
+    This api is used to control all pendulum instances through a unified interface.
+
+
+paths:
+  /pendulums:
+    tags:
+      - supervisor
+    get:
+      summary: List the current pendulums configured
+      responses:
+        '200':
+          description: pendulum config response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulumConfig"
+  /startAll:
+    post:
+      summary: Start swinging all pendulums
+      responses:
+        '200':
+          content:
+            application/json:
+              type: string
+  /pauseAll:
+    post:
+      summary: Pause all pendulums
+      responses:
+        '200':
+          description: pendulum response
+        content:
+          application/json:
+            type: string
+  /stopAll:
+    post:
+      summary: Stop all pendulums
+      responses:
+        '200':
+          content:
+            application/json:
+              type: string
+  /settings:
+    put:
+      summary: Update the global settings for all running pendulums
+      requestBody:
+        content:
+          schema:
+            $ref: "#/components/schemas/globalConfig"
+      responses:
+        '200':
+          content:
+            application/json:
+              type: string
+  /events:
+    get:
+      summary: Server sent event endpoint that returns the events that happened for all pendulums
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              type: string
+components:
+  schemas:
+    pendulumConfig:
+      description: Config definition to start each pendulum instance
+      type: object
+      properties:
+        path:
+          type: string
+        port:
+          type: number
+        config:
+          $ref: '#/components/schemas/globalConfig'
+        pendulum:
+          $ref: '#/components/schemas/globalConfig'
+
+    globalConfig:
+      description: Global configuration that impacts the physics of running pendulums
+      type: object
+      properties:
+        gravity:
+          type: number
+        time:
+          type: number
+        refreshRate:
+          type: number
+    pendulum:
+      description: Pendulum model
+      type: object
+      properties:
+        id:
+          type: string
+        armLength:
+          type: number
+        angle:
+          type: number
+        mass:
+          type: number
+        bob:
+          type: object
+          properties:
+            radius:
+              type: number
+            color:
+              type: string
+            x:
+              type: number
+            y:
+              type: number
+        origin:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+        acceleration:
+          type: number
+        velocity:
+          type: number
+        left:
+          description: Id of the left node
+          type: string
+        right:
+          description: Id of the right node
+          type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - ApiKey: []

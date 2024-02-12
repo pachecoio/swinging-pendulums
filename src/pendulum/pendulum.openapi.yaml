@@ -1,0 +1,197 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Pendulums API'
+  description: |
+    API to manage single pendulum simulation.
+
+    This api is used to view and manage a single pendulum instance running on its isolated port.
+
+paths:
+  /health:
+    get:
+      summary: Check process health
+      responses:
+        '200':
+          description: Health check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/health'
+  /config:
+    get:
+      summary: Get the current process config information
+      responses:
+        '200':
+          description: Get config response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulumConfig"
+      put:
+        summary: Update process config
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulumConfig"
+        responses:
+          '200':
+            description: Config response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/pendulumConfig"
+  /pendulum:
+    get:
+      summary: Get pendulum information
+      responses:
+        '200':
+          description: pendulum response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulum"
+    put:
+      summary: Update pendulum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updatePendulum"
+      responses:
+        '200':
+          description: Pendulum response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulum"
+  /pendulum/start:
+      post:
+        summary: Start swinging pendulum
+        responses:
+          '200':
+            description: pendulum response
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/pendulum"
+  /pendulum/pause:
+    post:
+      summary: Pause swinging pendulum
+      responses:
+        '200':
+          description: pendulum response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulum"
+  /pendulum/stop:
+    post:
+      summary: Stop swinging pendulum
+      responses:
+        '200':
+          description: pendulum response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pendulum"
+components:
+  schemas:
+    health:
+      description: healthcheck response
+      type: object
+      properties:
+        ok:
+          type: string
+    pendulumConfig:
+      description: Configuration details for a pendulum process
+      type: object
+      properties:
+        gravity:
+          type: number
+        time:
+          type: number
+        refreshRate:
+          type: number
+    pendulum:
+      description: Pendulum model
+      type: object
+      properties:
+        id:
+          type: string
+        armLength:
+          type: number
+        angle:
+          type: number
+        mass:
+          type: number
+        bob:
+          type: object
+          properties:
+            radius:
+              type: number
+            color:
+              type: string
+            x:
+              type: number
+            y:
+              type: number
+        origin:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+        acceleration:
+          type: number
+        velocity:
+          type: number
+        left:
+          description: Id of the left node
+          type: string
+        right:
+          description: Id of the right node
+          type: string
+    updatePendulum:
+      type: object
+      properties:
+        mass:
+          type: number
+        armLength:
+          type: number
+        origin:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+        angle:
+          type: number
+        bobRadius:
+          type: number
+        bobColor:
+          type: string
+        left:
+          description: Id of the left node
+          type: string
+        right:
+          description: Id of the right node
+          type: string
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: A human readable error message
+          type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - ApiKey: []
