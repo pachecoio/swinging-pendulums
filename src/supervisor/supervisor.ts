@@ -5,6 +5,7 @@ import { Worker } from "worker_threads";
 import { createWorker } from "../worker/utils";
 import { getMovedEventName, getStartedEventName } from "../pendulum/utils/eventUtils";
 import { Pendulum, getBobPosition } from "../pendulum/models/pendulum";
+import cors from "cors";
 
 const DEFAULT_COLLISION_THRESHOLD = 50
 
@@ -27,6 +28,7 @@ export class Supervisor {
 
     private registerMiddlewares() {
         this.instance.use(express.json())
+        this.instance.use(cors())
     }
 
     private registerRoutes() {

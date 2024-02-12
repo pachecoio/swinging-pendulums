@@ -1,7 +1,7 @@
 const serverConfig = {
     gravity: process.env.DEFAULT_GRAVITY || 1,
     time: process.env.DEFAULT_TIME || 1,
-    refreshRate: process.env.DEFAULT_REFRESH_RATE || 1000,
+    refreshRate: process.env.DEFAULT_REFRESH_RATE || 100,
 }
 
 export const pendulumsConfig = [

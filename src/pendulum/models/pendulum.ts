@@ -104,6 +104,7 @@ export class Pendulum {
     this.resetMotionValues();
     this.update({
       angle: this.initialConfig.initialAngle,
+      origin: this.initialConfig.origin,
     });
   }
 

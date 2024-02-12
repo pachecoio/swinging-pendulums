@@ -34,8 +34,13 @@ export class Service {
             this.swingPendulum()
         })
 
+        this.broker.on("pauseAll", () => {
+            this.stopPendulum()
+        })
+
         this.broker.on("stopAll", () => {
             this.stopPendulum()
+            this.resetPendulum()
         })
     }
 

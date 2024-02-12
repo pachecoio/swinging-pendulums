@@ -4,6 +4,7 @@ import { Service } from "./service";
 import express, { Express } from "express";
 import expressWs from "express-ws";
 import websocketHandler from "./websocketHandler";
+import cors from "cors";
 
 export class App {
     instance: Express
@@ -25,6 +26,7 @@ export class App {
 
     private registerMiddlewares() {
         this.instance.use(express.json())
+        this.instance.use(cors())
         expressWs(this.instance)
     }
 

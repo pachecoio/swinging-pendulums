@@ -16,6 +16,15 @@ router.post("/startAll", (req, res) => {
     res.status(202).send("Starting all pendulums")
 })
 
+router.post("/pauseAll", (req, res) => {
+    const supervisor = req.app.locals.supervisor
+
+    // Publish pause all event
+    supervisor.broker.emit("pauseAll", { reason: "User requested" })
+
+    res.status(202).send("Pausing all pendulums")
+})
+
 router.post("/stopAll", (req, res) => {
     const supervisor = req.app.locals.supervisor
 
