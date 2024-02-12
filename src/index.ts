@@ -1,12 +1,14 @@
 import dotenv from 'dotenv';
 import { pendulumsConfig } from "./config";
-import { createWorker } from "./worker/utils";
+import { Supervisor } from './supervisor/supervisor';
+import { getDefaultBroker } from './pendulum/adapters/broker';
 
 dotenv.config();
 
-const workers = []
-
-pendulumsConfig.forEach((config) => {
-    workers.push(createWorker(config))
+getDefaultBroker().then((broker) => {
+    console.log('Connected to broker for supervisor')
+    const supervisor = new Supervisor(broker, pendulumsConfig);
+    supervisor.start();
+}).catch((err) => {
+    console.log('Error starting supervisor', err)
 })
-

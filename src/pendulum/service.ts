@@ -1,6 +1,6 @@
 import { Broker } from "./adapters/base";
 import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
-import { getMoveEventName, getResetEventName, getStoppedEventName, getUpdateEventName } from "./utils/eventUtils";
+import { getMoveEventName, getResetEventName, getStartEventName, getStoppedEventName, getUpdateEventName } from "./utils/eventUtils";
 export const DEFAULT_GRAVITY = 1
 export const DEFAULT_TIME = 1
 export const DEFAULT_REFRESH_RATE = 100
@@ -23,6 +23,19 @@ export class Service {
         this.time = options.time || DEFAULT_TIME
         this.refreshRate = options.refreshRate || DEFAULT_REFRESH_RATE
         this.pendulum = new Pendulum(options)
+
+        this.registerSupervisorEvents()
+    }
+
+    private registerSupervisorEvents() {
+        console.log('subscribing to supervisor events')
+        this.broker.on("startAll", () => {
+            this.swingPendulum()
+        })
+
+        this.broker.on("stopAll", () => {
+            this.stopPendulum()
+        })
     }
 
     movePendulum() {
@@ -38,6 +51,9 @@ export class Service {
         this.swingingInterval = setInterval(() => {
             this.movePendulum()
         }, this.refreshRate)
+
+        const eventName = getStartEventName(this.pendulum.id)
+        this.broker.emit(eventName, this.pendulum)
     }
 
     stopPendulum() {

@@ -9,6 +9,7 @@ import {
 import { EventEmitter } from "stream";
 
 describe("App", () => {
+  jest.useFakeTimers()
   const initialPort = process.env.PORT;
   const initialNodeEnv = process.env.NODE_ENV;
 
@@ -134,4 +135,26 @@ describe("App", () => {
 
     expect(res.body.bob.x).not.toBe(initialBobX);
   });
+
+  it("should start pendulum when supervisor emits startAll event", async () => {
+    const broker = new EventEmitter();
+    const app = new App(broker);
+
+    let res = await request(app.instance).get("/pendulum");
+
+    const initialBobX = res.body.bob.x;
+
+    broker.emit("startAll");
+
+    jest.advanceTimersByTime(1000);
+
+    res = await request(app.instance).get("/pendulum");
+    const newBobX = res.body.bob.x;
+    expect(newBobX).not.toBe(initialBobX);
+
+    broker.emit("stopAll");
+
+    jest.advanceTimersByTime(1000);
+    expect(res.body.bob.x).toBe(newBobX);
+  })
 });

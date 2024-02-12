@@ -11,6 +11,9 @@ services:
       - 3002:3002
       - 3003:3003
       - 3004:3004
+    volumes:
+      - ./logs:/mosquitto/log
+      - ./data:/mosquitto/data
     environment:
       - MQTT_BROKER_URI=mqtt://broker:1883
     networks:
