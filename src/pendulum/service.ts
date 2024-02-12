@@ -1,3 +1,4 @@
+import { PAUSE_ALL, START_ALL, STOP_ALL, UPDATE_SETTINGS } from "../constants";
 import { Broker } from "./adapters/base";
 import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
 import { getMovedEventName, getResetEventName, getStartCommandName, getStartedEventName, getStoppedEventName, getUpdatedEventName } from "./utils/eventUtils";
@@ -30,17 +31,21 @@ export class Service {
 
     private registerSupervisorEvents() {
         console.log('subscribing to supervisor events')
-        this.broker.on("startAll", () => {
+        this.broker.on(START_ALL, () => {
             this.swingPendulum()
         })
 
-        this.broker.on("pauseAll", () => {
+        this.broker.on(PAUSE_ALL, () => {
             this.stopPendulum()
         })
 
-        this.broker.on("stopAll", () => {
+        this.broker.on(STOP_ALL, () => {
             this.stopPendulum()
             this.resetPendulum()
+        })
+
+        this.broker.on(UPDATE_SETTINGS, (options: ServiceOptions) => {
+            this.setConfig(options)
         })
     }
 

@@ -7,6 +7,7 @@ import {
   DEFAULT_TIME,
 } from "../service";
 import { EventEmitter } from "stream";
+import { START_ALL, STOP_ALL } from "../../constants";
 
 describe("App", () => {
   jest.useFakeTimers()
@@ -144,7 +145,7 @@ describe("App", () => {
 
     const initialBobX = res.body.bob.x;
 
-    broker.emit("startAll");
+    broker.emit(START_ALL);
 
     jest.advanceTimersByTime(1000);
 
@@ -152,7 +153,7 @@ describe("App", () => {
     const newBobX = res.body.bob.x;
     expect(newBobX).not.toBe(initialBobX);
 
-    broker.emit("stopAll");
+    broker.emit(STOP_ALL);
 
     jest.advanceTimersByTime(1000);
     expect(res.body.bob.x).toBe(newBobX);

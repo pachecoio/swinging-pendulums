@@ -6,6 +6,7 @@ import { createWorker } from "../worker/utils";
 import { getMovedEventName, getStartedEventName } from "../pendulum/utils/eventUtils";
 import { Pendulum, getBobPosition } from "../pendulum/models/pendulum";
 import cors from "cors";
+import { COLLISION_DETECTED, PAUSE_ALL, START_ALL, STOP_ALL } from "../constants";
 
 const DEFAULT_COLLISION_THRESHOLD = 50
 
@@ -56,39 +57,30 @@ export class Supervisor {
         const pendulumStartedEventName = getStartedEventName(pendulumId)
 
         this.broker.on(pendulumStartedEventName, (pendulum: Pendulum) => {
-            console.log('Pendulum started', pendulumId)
             this.pendulums.set(pendulumId, pendulum)
         })
 
         const pendulumMovedEventName = getMovedEventName(pendulumId)
 
         this.broker.on(pendulumMovedEventName, (pendulum: Pendulum) => {
-            console.log(`
-                Pendulum moved:
-                id: ${pendulum.id}
-                x: ${pendulum.bob.x}
-                y: ${pendulum.bob.y}
-                left: ${pendulum.left}
-                right: ${pendulum.right}
-            `)
             this.pendulums.set(pendulumId, pendulum)
             this.detectCollision(pendulum)
         })
     }
 
     private registerCollisionEvent() {
-        this.broker.on('pauseAll', ({ reason }: { reason: string }) => {
+        this.broker.on(PAUSE_ALL, ({ reason }: { reason: string }) => {
             if (reason === 'Collision detected') {
                 console.log('Collision detected, restargin penduluns in 5 seconds')
                 const timeout = setTimeout(() => {
-                    this.broker.emit('stopAll', { reason: 'Collision detected' })
-                    this.broker.emit('startAll', { reason: 'Collision detected' })
+                    this.broker.emit(STOP_ALL, { reason: 'Collision detected' })
+                    this.broker.emit(START_ALL, { reason: 'Collision detected' })
                 }, 5000)
 
                 const cancelTimeout = () => clearTimeout(timeout)
-                this.broker.on('startAll', cancelTimeout)
-                this.broker.on('stopAll', cancelTimeout)
-                this.broker.on('pauseAll', cancelTimeout)
+                this.broker.on(START_ALL, cancelTimeout)
+                this.broker.on(STOP_ALL, cancelTimeout)
+                this.broker.on(PAUSE_ALL, cancelTimeout)
             }
         })
     }
@@ -96,8 +88,8 @@ export class Supervisor {
     private detectCollision(pendulum: Pendulum) {
         if (this.hasLeftCollision(pendulum) || this.hasRightCollision(pendulum)) {
             console.log('collision detected')
-            this.broker.emit('collision', pendulum.id)
-            this.broker.emit('pauseAll', { reason: 'Collision detected' })
+            this.broker.emit(COLLISION_DETECTED, pendulum.id)
+            this.broker.emit(PAUSE_ALL, { reason: 'Collision detected' })
         }
     }
 
