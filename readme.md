@@ -31,60 +31,11 @@ The Supervisor module oversees the operation of multiple Pendulum module instanc
 
 ### Pendulum Module API
 
-- **POST /configure**
-  - Description: Configure pendulum initial parameters.
-  - Body:
-    ```json
-    {
-      "angularOffset": float,
-      "mass": float,
-      "stringLength": float
-    }
-    ```
-  - Response: `200 OK` if successful.
-
-- **GET /state**
-  - Description: Retrieve the current state (coordinates) of the pendulum.
-  - Response:
-    ```json
-    {
-      "x": float,
-      "y": float
-    }
-    ```
-
-- **POST /control**
-  - Description: Control the pendulum's simulation (start, pause, stop).
-  - Body:
-    ```json
-    {
-      "action": "start" | "pause" | "stop"
-    }
-    ```
-  - Response: `200 OK` if successful.
+Refer to the openapi documentation under `src/pendulum/pendulum.openapi.yaml`.
 
 ### Supervisor Module API
 
-- **POST /instances/control**
-  - Description: Globally control the state of all pendulum instances.
-  - Body:
-    ```json
-    {
-      "action": "start" | "pause" | "stop"
-    }
-    ```
-  - Response: `200 OK` if successful.
-
-- **POST /configuration/global**
-  - Description: Set global configuration parameters.
-  - Body:
-    ```json
-    {
-      "gravity": float,
-      "timeStep": float
-    }
-    ```
-  - Response: `200 OK` if successful.
+Refer to the openapi documentation under `src/supervisor/supervisor.openapi.yaml`.
 
 ### MQTT Communication for Emergency Stop
 
@@ -92,4 +43,4 @@ In case pendulums come too close to each other, an MQTT message with topic `PAUS
 
 ## UI Interaction
 
-The UI interacts with the backend service through the REST API for configuration and control of pendulum instances. It periodically polls the state of each pendulum for visualization. 
+The UI interacts with the backend service through the REST API for configuration and control of pendulum instances. It periodically polls the state of each pendulum for visualization.
