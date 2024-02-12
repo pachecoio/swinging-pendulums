@@ -17,6 +17,9 @@ export const pendulumsConfig = [
                 y: 0,
             },
             initialAngle: Math.PI / 4,
+            armLength: 100,
+            bobColor: 'red',
+            bobRadius: 30,
         },
     },
     {
@@ -31,7 +34,10 @@ export const pendulumsConfig = [
                 x: 200,
                 y: 0,
             },
+            armLength: 200,
             initialAngle: Math.PI / 2,
+            bobColor: 'blue',
+            bobRadius: 20,
         },
     },
     {
@@ -43,10 +49,13 @@ export const pendulumsConfig = [
             left: '2',
             right: '4',
             origin: {
-                x: 300,
+                x: 400,
                 y: 0,
             },
+            armLength: 150,
             initialAngle: Math.PI / 3,
+            bobColor: 'green',
+            bobRadius: 50,
         },
     },
     {
@@ -58,10 +67,13 @@ export const pendulumsConfig = [
             left: '3',
             right: '5',
             origin: {
-                x: 400,
+                x: 600,
                 y: 0,
             },
+            armLength: 200,
             initialAngle: Math.PI / 6,
+            bobColor: 'yellow',
+            bobRadius: 40,
         },
     },
     {
@@ -72,10 +84,13 @@ export const pendulumsConfig = [
             id: '5',
             left: '4',
             origin: {
-                x: 500,
+                x: 700,
                 y: 0,
             },
-            initialAngle: Math.PI / 8,
+            armLength: 100,
+            initialAngle: Math.PI / 4,
+            bobColor: 'purple',
+            bobRadius: 60,
         },
     },
 ]

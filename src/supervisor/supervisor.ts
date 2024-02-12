@@ -45,6 +45,8 @@ export class Supervisor {
             this.registerPendulumEvents(config.pendulum.id)
         })
 
+        this.registerCollisionEvent()
+
         this.instance.listen(3000, () => {
             console.log("Server started on port 3000");
         })
@@ -74,13 +76,28 @@ export class Supervisor {
         })
     }
 
-    private detectCollision(pendulum: Pendulum) {
-        if (this.hasLeftCollision(pendulum)) {
-            console.log('Left collision detected')
-        }
+    private registerCollisionEvent() {
+        this.broker.on('pauseAll', ({ reason }: { reason: string }) => {
+            if (reason === 'Collision detected') {
+                console.log('Collision detected, restargin penduluns in 5 seconds')
+                const timeout = setTimeout(() => {
+                    this.broker.emit('stopAll', { reason: 'Collision detected' })
+                    this.broker.emit('startAll', { reason: 'Collision detected' })
+                }, 5000)
 
-        if (this.hasRightCollision(pendulum)) {
-            console.log('Right collision detected')
+                const cancelTimeout = () => clearTimeout(timeout)
+                this.broker.on('startAll', cancelTimeout)
+                this.broker.on('stopAll', cancelTimeout)
+                this.broker.on('pauseAll', cancelTimeout)
+            }
+        })
+    }
+
+    private detectCollision(pendulum: Pendulum) {
+        if (this.hasLeftCollision(pendulum) || this.hasRightCollision(pendulum)) {
+            console.log('collision detected')
+            this.broker.emit('collision', pendulum.id)
+            this.broker.emit('pauseAll', { reason: 'Collision detected' })
         }
     }
 
