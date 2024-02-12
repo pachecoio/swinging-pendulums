@@ -11,6 +11,7 @@ export const pendulumsConfig = [
         config: serverConfig,
         pendulum: {
             id: '1',
+            right: '2',
             origin: {
                 x: 100,
                 y: 0,
@@ -24,6 +25,8 @@ export const pendulumsConfig = [
         config: serverConfig,
         pendulum: {
             id: '2',
+            left: '1',
+            right: '3',
             origin: {
                 x: 200,
                 y: 0,
@@ -37,6 +40,8 @@ export const pendulumsConfig = [
         config: serverConfig,
         pendulum: {
             id: '3',
+            left: '2',
+            right: '4',
             origin: {
                 x: 300,
                 y: 0,
@@ -50,6 +55,8 @@ export const pendulumsConfig = [
         config: serverConfig,
         pendulum: {
             id: '4',
+            left: '3',
+            right: '5',
             origin: {
                 x: 400,
                 y: 0,
@@ -63,6 +70,7 @@ export const pendulumsConfig = [
         config: serverConfig,
         pendulum: {
             id: '5',
+            left: '4',
             origin: {
                 x: 500,
                 y: 0,

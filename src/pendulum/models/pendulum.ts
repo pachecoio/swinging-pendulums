@@ -14,6 +14,8 @@ export class Pendulum {
   acceleration: number = 0;
   velocity: number = 0;
   private initialConfig: CreatePendulumOptions;
+  left?: string;
+  right?: string
 
   constructor({
     id = generateId(),
@@ -23,9 +25,13 @@ export class Pendulum {
     mass = DEFAULT_MASS,
     bobRadius = DEFAULT_BOB_RADIUS,
     bobColor = DEFAULT_BOB_COLOR,
+    left,
+    right,
   }: CreatePendulumOptions = {}) {
     this.id = id;
     this.armLength = armLength;
+    this.left = left;
+    this.right = right;
 
     this.initialConfig = {
       id,
@@ -52,10 +58,7 @@ export class Pendulum {
   }
 
   getBobPosition(): Position {
-    return {
-      x: this.armLength * Math.sin(this.angle) + this.origin.x,
-      y: this.armLength * Math.cos(this.angle) + this.origin.y,
-    };
+    return getBobPosition(this);
   }
 
   setAngle(angle: number) {
@@ -80,6 +83,8 @@ export class Pendulum {
     this.angle = options.angle || this.angle;
     this.bob.radius = options.bobRadius || this.bob.radius;
     this.bob.color = options.bobColor || this.bob.color;
+    this.left = options.left || this.left;
+    this.right = options.right || this.right;
 
     this.resetMotionValues();
 
@@ -121,6 +126,13 @@ export class Pendulum {
   }
 }
 
+export function getBobPosition(pendulum: Pendulum): Position {
+  return {
+    x: pendulum.armLength * Math.sin(pendulum.angle) + pendulum.origin.x,
+    y: pendulum.armLength * Math.cos(pendulum.angle) + pendulum.origin.y,
+  };
+}
+
 function generateId() {
   return Math.random().toString(36).substr(2, 9);
 }
@@ -143,6 +155,8 @@ export type CreatePendulumOptions = {
   mass?: number;
   bobRadius?: number;
   bobColor?: string;
+  left?: string;
+  right?: string;
 };
 
 export type UpdatePendulumOptions = {
@@ -152,4 +166,6 @@ export type UpdatePendulumOptions = {
   angle?: number;
   bobRadius?: number;
   bobColor?: string;
+  left?: string;
+  right?: string;
 };

@@ -10,7 +10,7 @@ export class MQTTBroker implements Broker {
     this.registerMessageHandler();
   }
 
-  static async init(clientId: string = 'pendulum-service') {
+  static async init() {
     const uri = process.env.MQTT_BROKER_URI || 'mqtt://localhost:1883';
 
     const client = await new Promise<MqttClient>((resolve, reject) => {
@@ -58,7 +58,6 @@ export class MQTTBroker implements Broker {
   }
 
   emit(topic: string, payload: any) {
-    console.log('Emitting message', topic, payload)
     this.client.publish(topic, JSON.stringify(payload), { qos: 1, retain: false });
   }
 

@@ -2,7 +2,8 @@ import { describe } from "@jest/globals";
 import mqtt from "mqtt";
 import { MQTTBroker } from "../mqtt";
 
-describe("Test mqtt integration", () => {
+// Integration test requires mqtt running
+describe.skip("Test mqtt integration", () => {
 
   const connect = async (uri: string, options: any) => {
     return new Promise((resolve, reject) => {

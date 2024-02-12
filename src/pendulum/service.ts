@@ -1,6 +1,6 @@
 import { Broker } from "./adapters/base";
 import { CreatePendulumOptions, Pendulum, UpdatePendulumOptions } from "./models/pendulum";
-import { getMoveEventName, getResetEventName, getStartEventName, getStoppedEventName, getUpdateEventName } from "./utils/eventUtils";
+import { getMovedEventName, getResetEventName, getStartCommandName, getStartedEventName, getStoppedEventName, getUpdatedEventName } from "./utils/eventUtils";
 export const DEFAULT_GRAVITY = 1
 export const DEFAULT_TIME = 1
 export const DEFAULT_REFRESH_RATE = 100
@@ -25,6 +25,7 @@ export class Service {
         this.pendulum = new Pendulum(options)
 
         this.registerSupervisorEvents()
+        this.registerPendulumCommands()
     }
 
     private registerSupervisorEvents() {
@@ -38,12 +39,24 @@ export class Service {
         })
     }
 
+    private registerPendulumCommands() {
+        const startCommand = getStartCommandName(this.pendulum.id)
+        this.broker.on(startCommand, () => {
+            this.swingPendulum()
+        })
+
+        const stopCommand = getStartCommandName(this.pendulum.id)
+        this.broker.on(stopCommand, () => {
+            this.stopPendulum()
+        })
+    }
+
     movePendulum() {
         this.pendulum.move({
             gravity: this.gravity,
             time: this.time
         })
-        const eventName = getMoveEventName(this.pendulum.id)
+        const eventName = getMovedEventName(this.pendulum.id)
         this.broker.emit(eventName, this.pendulum)
     }
 
@@ -52,7 +65,7 @@ export class Service {
             this.movePendulum()
         }, this.refreshRate)
 
-        const eventName = getStartEventName(this.pendulum.id)
+        const eventName = getStartedEventName(this.pendulum.id)
         this.broker.emit(eventName, this.pendulum)
     }
 
@@ -108,7 +121,7 @@ export class Service {
 
     updatePendulum(options: UpdatePendulumOptions) {
         this.pendulum.update(options)
-        const eventName = getUpdateEventName(this.pendulum.id)
+        const eventName = getUpdatedEventName(this.pendulum.id)
         this.broker.emit(eventName, this.pendulum)
     }
 }

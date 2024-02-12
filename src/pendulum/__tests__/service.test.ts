@@ -3,13 +3,13 @@ import { Pendulum } from "../models/pendulum";
 import { EventEmitter } from "events";
 import { DEFAULT_GRAVITY, DEFAULT_TIME, Service } from "../service";
 import { Broker } from "../adapters/base";
-import { getMoveEventName, getStoppedEventName } from "../utils/eventUtils";
+import { getMovedEventName, getStoppedEventName } from "../utils/eventUtils";
 
 describe("Test pendulum service", () => {
   jest.useFakeTimers();
 
   it("should create a service instance", () => {
-    const broker = jest.fn() as unknown as Broker;
+    const broker = new EventEmitter();
     const service = new Service(broker);
     expect(service).toBeInstanceOf(Service);
     // @ts-ignore
@@ -27,7 +27,7 @@ describe("Test pendulum service", () => {
     const broker = new EventEmitter();
     const service = new Service(broker);
 
-    const moveEventName = getMoveEventName(service.pendulum.id);
+    const moveEventName = getMovedEventName(service.pendulum.id);
     const stopEventName = getStoppedEventName(service.pendulum.id);
 
     service.on(moveEventName, moveHandler).on(stopEventName, stopHandler);
@@ -44,7 +44,7 @@ describe("Test pendulum service", () => {
     const broker = new EventEmitter();
     const service = new Service(broker)
 
-    const moveEventName = getMoveEventName(service.pendulum.id);
+    const moveEventName = getMovedEventName(service.pendulum.id);
     const stopEventName = getStoppedEventName(service.pendulum.id);
 
     service
@@ -64,7 +64,7 @@ describe("Test pendulum service", () => {
     const broker = new EventEmitter();
     const service = new Service(broker, { refreshRate: 100 })
 
-    const moveEventName = getMoveEventName(service.pendulum.id);
+    const moveEventName = getMovedEventName(service.pendulum.id);
     const stopEventName = getStoppedEventName(service.pendulum.id);
 
     service
